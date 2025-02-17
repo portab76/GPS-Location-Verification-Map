@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         body {
-            background: yellow;
+            background: lightgrey;
             text-align: -webkit-center;
             height: 100%;
         }
@@ -84,7 +84,7 @@
         </td>
     </tr>
     </table>
-<div class="container">
+    <div class="container">
         <div id="map">
             <div class="toolbar">
                 <button id="centrarMapa" class="btn btn-primary">Centrar</button>
@@ -95,9 +95,7 @@
             </div>
         </div>    
     </div>
-    
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    
     <script>
         var map = L.map('map').setView([0, 0], 2); // Coordenadas iniciales y zoom
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -124,25 +122,12 @@
         var finalizarEdicionButton = document.getElementById('finalizarEdicion');
         var borrarAreaButton = document.getElementById('borrarArea');
 
-        // Funciones auxiliares
         function updateLocation(lat, lng) {
             latitudSpan.textContent = lat;
             longitudSpan.textContent = lng;
             userMarker.setLatLng([lat, lng]);
-console.log(areaPolygon.getBounds());
-checkLocation();
-            /*
-            if (areaPolygon) {
-                if (leafletPip.pointInLayer([lng, lat], areaPolygon, true)) {
-                    semaforo.style.backgroundColor = 'green';
-                } else {
-                    semaforo.style.backgroundColor = 'red';
-                }
-            } else {
-                semaforo.style.backgroundColor = 'gray';
-            }*/
+            checkLocation();
         }
-
 
         function checkLocation() {
             if (userMarker && areaPolygon) {
@@ -174,11 +159,9 @@ checkLocation();
                 }
                 areaPolygon = L.polygon(areaPoints, { color: 'red' }).addTo(drawnItems);
             }
-
             resetDrawing();
         }
 
-        // Event listeners
         centrarMapaButton.addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -218,7 +201,6 @@ checkLocation();
             semaforo.style.backgroundColor = 'gray';
         });
 
-        // Eventos del mapa
         map.on('mousedown', function(e) {
             if (drawing && drawingMode === 'DEDO') {
                 areaPoints = [e.latlng];
@@ -252,20 +234,18 @@ checkLocation();
 
             }
         });
+
         var cnt=0;
-        // Obtener ubicación cada 100ms
+
         setInterval(function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
-                    // Guarda el centro actual del mapa
                     var currentCenter = map.getCenter();
-                    // Actualiza la ubicacion
                     updateLocation(lat, lng);
                     document.getElementById("count").innerHTML = cnt++;
-                    // Restablece el centro del mapa a la posición anterior
-                    map.setView(currentCenter, map.getZoom(), { animate: false }); // Mantén el zoom actual
+                    map.setView(currentCenter, map.getZoom(), { animate: false }); 
                 }, function(error) {
                     console.error("Error al obtener la ubicación: " + error.message);
                 });
